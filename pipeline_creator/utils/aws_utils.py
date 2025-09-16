@@ -5,8 +5,12 @@ This module provides utility functions for AWS operations and validations.
 """
 
 import boto3
+import subprocess
+import json
+import os
 from botocore.exceptions import ClientError, NoCredentialsError
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
+from pathlib import Path
 
 
 def check_aws_credentials() -> bool:
@@ -45,6 +49,96 @@ def get_aws_account_info() -> Optional[Dict[str, str]]:
         }
     except (NoCredentialsError, ClientError):
         return None
+
+
+def check_cdk_installed() -> bool:
+    """
+    Check if AWS CDK CLI is installed
+    
+    Returns:
+        True if CDK is installed, False otherwise
+    """
+    try:
+        result = subprocess.run(['cdk', '--version'], 
+                              capture_output=True, text=True, timeout=10)
+        return result.returncode == 0
+    except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):
+        return False
+
+
+def get_cdk_version() -> Optional[str]:
+    """
+    Get AWS CDK CLI version
+    
+    Returns:
+        CDK version string or None if not available
+    """
+    try:
+        result = subprocess.run(['cdk', '--version'], 
+                              capture_output=True, text=True, timeout=10)
+        if result.returncode == 0:
+            return result.stdout.strip()
+        return None
+    except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):
+        return None
+
+
+def check_cdk_bootstrap(region: str) -> Tuple[bool, Optional[str]]:
+    """
+    Check if CDK is bootstrapped in the specified region
+    
+    Args:
+        region: AWS region to check
+        
+    Returns:
+        Tuple of (is_bootstrapped, error_message)
+    """
+    try:
+        session = boto3.Session()
+        cloudformation = session.client('cloudformation', region_name=region)
+        
+        # Check for CDK bootstrap stack
+        try:
+            response = cloudformation.describe_stacks(StackName='CDKToolkit')
+            stack = response['Stacks'][0]
+            if stack['StackStatus'] in ['CREATE_COMPLETE', 'UPDATE_COMPLETE']:
+                return True, None
+            else:
+                return False, f"CDK bootstrap stack is in status: {stack['StackStatus']}"
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ValidationError':
+                return False, "CDK is not bootstrapped in this region"
+            return False, str(e)
+            
+    except Exception as e:
+        return False, f"Error checking CDK bootstrap status: {str(e)}"
+
+
+def bootstrap_cdk(region: str) -> Tuple[bool, Optional[str]]:
+    """
+    Bootstrap CDK in the specified region
+    
+    Args:
+        region: AWS region to bootstrap
+        
+    Returns:
+        Tuple of (success, error_message)
+    """
+    try:
+        result = subprocess.run([
+            'cdk', 'bootstrap', 
+            f'aws://unknown-account/{region}'
+        ], capture_output=True, text=True, timeout=300)
+        
+        if result.returncode == 0:
+            return True, None
+        else:
+            return False, result.stderr or result.stdout
+            
+    except subprocess.TimeoutExpired:
+        return False, "CDK bootstrap timed out after 5 minutes"
+    except Exception as e:
+        return False, f"Error during CDK bootstrap: {str(e)}"
 
 
 def validate_aws_region(region: str) -> bool:

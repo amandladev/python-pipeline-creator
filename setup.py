@@ -16,11 +16,11 @@ setup(
     name="pipeline-creator",
     version="0.1.0",
     author="Sergio Reyes",
-    author_email="sergio@example.com",
+    author_email="sreyescurotto@gmail.com",
     description="A CLI tool for creating and managing CI/CD pipelines on AWS",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/your-username/pipeline-creator",
+    url="https://github.com/amandladev/python-pipeline-creator",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",

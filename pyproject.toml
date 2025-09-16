@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "pipeline-creator"
 version = "0.1.0"
 authors = [
-    {name = "Sergio Reyes", email = "sergio@example.com"},
+    {name = "Sergio Reyes", email = "sreyescurotto@gmail.com"},
 ]
 description = "A CLI tool for creating and managing CI/CD pipelines on AWS"
 readme = "README.md"
@@ -46,9 +46,9 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/your-username/pipeline-creator"
-"Bug Tracker" = "https://github.com/your-username/pipeline-creator/issues"
-"Documentation" = "https://github.com/your-username/pipeline-creator/wiki"
+"Homepage" = "https://github.com/amandladev/python-pipeline-creator"
+"Bug Tracker" = "https://github.com/amandladev/python-pipeline-creator/issues"
+"Documentation" = "https://github.com/amandladev/python-pipeline-creator/wiki"
 
 [project.scripts]
 pipeline = "pipeline_creator.main:cli"
