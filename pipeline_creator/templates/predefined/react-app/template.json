@@ -1,0 +1,70 @@
+{
+  "name": "react-app",
+  "version": "1.0.0",
+  "description": "Complete React application pipeline with build, test, and deployment",
+  "category": "web-frontend",
+  "author": "Pipeline Creator Team",
+  "tags": ["react", "frontend", "web", "spa", "nodejs"],
+  "requirements": ["Node.js 18+", "npm or yarn", "AWS Account"],
+  "parameters": [
+    {
+      "name": "app_name",
+      "type": "string",
+      "description": "Application name for the React app",
+      "required": true,
+      "pattern": "^[a-z][a-z0-9-]*[a-z0-9]$"
+    },
+    {
+      "name": "node_version",
+      "type": "select",
+      "description": "Node.js version to use",
+      "default": "18",
+      "required": false,
+      "options": ["16", "18", "20"]
+    },
+    {
+      "name": "package_manager",
+      "type": "select",
+      "description": "Package manager to use",
+      "default": "npm",
+      "required": false,
+      "options": ["npm", "yarn", "pnpm"]
+    },
+    {
+      "name": "test_coverage_threshold",
+      "type": "integer",
+      "description": "Minimum test coverage percentage required",
+      "default": 80,
+      "required": false,
+      "min_value": 0,
+      "max_value": 100
+    },
+    {
+      "name": "enable_sonar",
+      "type": "boolean",
+      "description": "Enable SonarQube code quality analysis",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "enable_security_scan",
+      "type": "boolean", 
+      "description": "Enable security vulnerability scanning",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "s3_bucket_name",
+      "type": "string",
+      "description": "S3 bucket name for hosting (auto-generated if empty)",
+      "required": false
+    },
+    {
+      "name": "cloudfront_enabled",
+      "type": "boolean",
+      "description": "Enable CloudFront CDN for global distribution",
+      "default": true,
+      "required": false
+    }
+  ]
+}

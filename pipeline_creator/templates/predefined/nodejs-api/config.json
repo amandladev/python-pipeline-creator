@@ -1,0 +1,69 @@
+{
+  "name": "{{ app_name }}",
+  "repo_name": "{{ app_name }}",
+  "project_type": "nodejs",
+  "aws_region": "us-east-1",
+  "runtime": {
+    "language": "nodejs",
+    "version": "{{ node_version }}"
+  },
+  "build": {
+    "commands": [
+      "echo 'Installing dependencies'",
+      "npm ci",
+      "echo 'Running linting checks'",
+      "npm run lint",
+      "echo 'Running tests with coverage'",
+      "npm run test:coverage",
+      "echo 'Building application'",
+      "npm run build",
+      "echo 'Building Docker image'",
+      "docker build -t {{ app_name }}:latest ."
+    ],
+    "artifacts": {
+      "files": ["dist/**/*", "package*.json", "Dockerfile"],
+      "base-directory": ".",
+      "name": "nodejs-api-artifacts"
+    },
+    "cache": {
+      "paths": ["node_modules/**/*"]
+    }
+  },
+  "test": {
+    "enabled": true,
+    "commands": [
+      "npm run test",
+      "npm run test:coverage"
+    ],
+    "coverage": {
+      "threshold": "{{ test_coverage_threshold }}",
+      "reports": ["coverage/**/*"]
+    }
+  },
+  "extra_stages": [],
+  "deploy": {
+    "type": "{{ deployment_type }}",
+    "config": {
+      "container_name": "{{ app_name }}",
+      "container_port": "{{ container_port }}",
+      "cpu": 256,
+      "memory": 512,
+      "desired_count": 2,
+      "health_check_path": "/health",
+      "environment_variables": {
+        "NODE_ENV": "production",
+        "PORT": "{{ container_port }}"
+      }
+    }
+  },
+  "environment_variables": {
+    "NODE_ENV": "production",
+    "APP_VERSION": "$CODEBUILD_BUILD_NUMBER",
+    "BUILD_ID": "$CODEBUILD_BUILD_ID"
+  },
+  "notifications": {
+    "enabled": true,
+    "channels": ["email"],
+    "events": ["pipeline_failed", "pipeline_succeeded", "deploy_completed", "test_failed"]
+  }
+}

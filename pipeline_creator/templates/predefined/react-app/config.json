@@ -1,0 +1,61 @@
+{
+  "name": "{{ app_name }}",
+  "repo_name": "{{ app_name }}",
+  "project_type": "react",
+  "aws_region": "us-east-1",
+  "runtime": {
+    "language": "nodejs",
+    "version": "{{ node_version }}"
+  },
+  "build": {
+    "commands": [
+      "echo 'Installing dependencies'",
+      "npm ci",
+      "echo 'Running tests with coverage'",
+      "npm run test:coverage",
+      "echo 'Building production bundle'",
+      "npm run build"
+    ],
+    "artifacts": {
+      "files": ["build/**/*"],
+      "base-directory": ".",
+      "name": "react-build-artifacts"
+    },
+    "cache": {
+      "paths": ["node_modules/**/*"]
+    }
+  },
+  "test": {
+    "enabled": true,
+    "commands": [
+      "npm run test",
+      "npm run test:coverage"
+    ],
+    "coverage": {
+      "threshold": "{{ test_coverage_threshold }}",
+      "reports": ["coverage/lcov-report/**/*"]
+    }
+  },
+  "extra_stages": [],
+  "deploy": {
+    "type": "s3-static",
+    "config": {
+      "bucket_name": "{{ s3_bucket_name }}",
+      "source_dir": "build",
+      "cloudfront": "{{ cloudfront_enabled }}",
+      "custom_domain": null,
+      "error_document": "error.html",
+      "index_document": "index.html"
+    }
+  },
+  "environment_variables": {
+    "NODE_ENV": "production",
+    "REACT_APP_VERSION": "$CODEBUILD_BUILD_NUMBER",
+    "REACT_APP_BUILD_ID": "$CODEBUILD_BUILD_ID"
+  },
+  "notifications": {
+    "enabled": true,
+    "channels": ["email"],
+    "events": ["pipeline_failed", "pipeline_succeeded", "deploy_completed"]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "name": "nodejs-api",
+  "version": "1.0.0",
+  "description": "Node.js API pipeline with Express, testing, and containerized deployment",
+  "category": "api",
+  "author": "Pipeline Creator Team",
+  "tags": ["nodejs", "express", "api", "backend", "javascript"],
+  "requirements": ["Node.js 18+", "Docker", "AWS Account"],
+  "parameters": [
+    {
+      "name": "app_name",
+      "type": "string",
+      "description": "Application name for the Node.js API",
+      "required": true,
+      "pattern": "^[a-z][a-z0-9-]*[a-z0-9]$"
+    },
+    {
+      "name": "node_version",
+      "type": "select",
+      "description": "Node.js version to use",
+      "default": "18",
+      "required": false,
+      "options": ["16", "18", "20"]
+    },
+    {
+      "name": "package_manager",
+      "type": "select",
+      "description": "Package manager to use",
+      "default": "npm",
+      "required": false,
+      "options": ["npm", "yarn", "pnpm"]
+    },
+    {
+      "name": "test_coverage_threshold",
+      "type": "integer",
+      "description": "Minimum test coverage percentage required",
+      "default": 80,
+      "required": false,
+      "min_value": 0,
+      "max_value": 100
+    },
+    {
+      "name": "enable_sonar",
+      "type": "boolean",
+      "description": "Enable SonarQube code quality analysis",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "enable_security_scan",
+      "type": "boolean",
+      "description": "Enable security vulnerability scanning",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "container_port",
+      "type": "integer",
+      "description": "Container port for the API",
+      "default": 3000,
+      "required": false,
+      "min_value": 1000,
+      "max_value": 65535
+    },
+    {
+      "name": "deployment_type",
+      "type": "select",
+      "description": "Deployment type",
+      "default": "ecs-fargate",
+      "required": false,
+      "options": ["ecs-fargate", "lambda", "ec2"]
+    }
+  ]
+}

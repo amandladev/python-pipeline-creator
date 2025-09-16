@@ -18,6 +18,8 @@ from .commands.deploy import deploy_command
 from .commands.status import status_command
 from .commands.logs import logs_command
 from .commands.add_stage import add_stage_command
+from .commands.notifications import notifications_command
+from .commands.templates import templates
 
 console = Console()
 
@@ -60,14 +62,14 @@ def cli(ctx):
 
 
 # Register all commands
-cli.add_command(init_command, name='init')
-cli.add_command(generate_command, name='generate')
-cli.add_command(deploy_command, name='deploy')  
-cli.add_command(status_command, name='status')
-cli.add_command(logs_command, name='logs')
-cli.add_command(add_stage_command, name='add-stage')
-
-
+cli.add_command(init_command, name="init")
+cli.add_command(generate_command, name="generate")
+cli.add_command(deploy_command, name="deploy")
+cli.add_command(status_command, name="status")
+cli.add_command(logs_command, name="logs")
+cli.add_command(add_stage_command, name="add-stage")
+cli.add_command(notifications_command, name="notifications")
+cli.add_command(templates, name="templates")
 def main():
     """Entry point for the CLI"""
     try:

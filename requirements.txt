@@ -5,6 +5,8 @@ rich>=13.0.0
 boto3>=1.26.0
 aws-cdk-lib>=2.0.0
 pyyaml>=6.0
+aiohttp>=3.8.0
+email-validator>=1.3.0
 
 # Development dependencies (optional, can be installed with pip install -e .[dev])
 pytest>=7.0.0
