@@ -1,75 +1,75 @@
-# 🚀 Pipeline Creator CLI - Estructura del Proyecto
+# 🚀 Pipeline Creator CLI - Project Structure
 
-## 📁 Estructura de archivos
+## 📁 File Structure
 
 ```
 pipeline_creator/
-├── README.md                    # Documentación principal del proyecto
-├── LICENSE                     # Licencia MIT
-├── setup.py                   # Configuración de instalación (legacy)
-├── pyproject.toml            # Configuración moderna de Python
-├── requirements.txt          # Dependencias del proyecto
-├── .gitignore               # Archivos a ignorar en Git
+├── README.md                    # Main project documentation
+├── LICENSE                     # MIT License
+├── setup.py                   # Installation configuration (legacy)
+├── pyproject.toml            # Modern Python configuration
+├── requirements.txt          # Project dependencies
+├── .gitignore               # Files to ignore in Git
 │
-├── pipeline_creator/        # Código fuente principal
-│   ├── __init__.py          # Inicialización del paquete
-│   ├── main.py             # Punto de entrada del CLI
+├── pipeline_creator/        # Main source code
+│   ├── __init__.py          # Package initialization
+│   ├── main.py             # CLI entry point
 │   │
-│   ├── commands/           # Comandos del CLI
-│   │   ├── __init__.py     # Inicialización del módulo
-│   │   ├── init.py         # Comando 'pipeline init'
-│   │   ├── generate.py     # Comando 'pipeline generate'
-│   │   ├── deploy.py       # Comando 'pipeline deploy'
-│   │   ├── status.py       # Comando 'pipeline status'
-│   │   └── logs.py         # Comando 'pipeline logs'
+│   ├── commands/           # CLI commands
+│   │   ├── __init__.py     # Module initialization
+│   │   ├── init.py         # 'pipeline init' command
+│   │   ├── generate.py     # 'pipeline generate' command
+│   │   ├── deploy.py       # 'pipeline deploy' command
+│   │   ├── status.py       # 'pipeline status' command
+│   │   └── logs.py         # 'pipeline logs' command
 │   │
-│   └── utils/             # Utilidades compartidas
-│       ├── __init__.py    # Inicialización del módulo
-│       ├── console.py     # Funciones para output colorido
-│       ├── file_utils.py  # Utilidades de archivos
-│       └── aws_utils.py   # Utilidades de AWS
+│   └── utils/             # Shared utilities
+│       ├── __init__.py    # Module initialization
+│       ├── console.py     # Colorful output functions
+│       ├── file_utils.py  # File utilities
+│       └── aws_utils.py   # AWS utilities
 │
-└── tests/                 # Tests unitarios
-    ├── __init__.py        # Inicialización del módulo
-    └── test_init.py       # Tests para comando init
+└── tests/                 # Unit tests
+    ├── __init__.py        # Module initialization
+    └── test_init.py       # Tests for init command
 ```
 
-## 🎯 Comandos implementados
+## 🎯 Implemented Commands
 
-### ✅ Completamente funcional
-- **`pipeline init`** - Inicializa configuración del pipeline
-  - Crea directorio `.pipeline/`
-  - Genera `config.json` con configuración por defecto
-  - Detecta tipo de proyecto automáticamente
-  - Soporte para flags: `--project-name`, `--region`, `--environment`, `--force`
+### ✅ Fully Functional
+- **`pipeline init`** - Initialize pipeline configuration
+  - Creates `.pipeline/` directory
+  - Generates `config.json` with default configuration
+  - Automatically detects project type
+  - Support for flags: `--project-name`, `--region`, `--environment`, `--force`
 
 ### 🚧 Placeholder (MVP)
-- **`pipeline generate`** - Genera archivos CDK (placeholder)
-- **`pipeline deploy`** - Despliega pipeline (placeholder)  
-- **`pipeline status`** - Muestra estado del pipeline (placeholder)
-- **`pipeline logs`** - Muestra logs del pipeline (placeholder)
+- **`pipeline generate`** - Generate CDK files (placeholder)
+- **`pipeline deploy`** - Deploy pipeline (placeholder)  
+- **`pipeline status`** - Show pipeline status (placeholder)
+- **`pipeline logs`** - Show pipeline logs (placeholder)
 
-## 🔧 Características técnicas
+## 🔧 Technical Features
 
-### Stack tecnológico
-- **Python 3.8+** - Lenguaje principal
-- **Click** - Framework para CLI
-- **Rich** - Output colorido y formateo
-- **AWS CDK** - Infraestructura como código
-- **Boto3** - SDK de AWS
-- **pytest** - Framework de testing
+### Technology Stack
+- **Python 3.8+** - Main language
+- **Click** - CLI framework
+- **Rich** - Colorful output and formatting
+- **AWS CDK** - Infrastructure as Code
+- **Boto3** - AWS SDK
+- **pytest** - Testing framework
 
-### Funcionalidades implementadas
-- ✅ CLI moderno con colores y emojis
-- ✅ Configuración JSON estructurada
-- ✅ Detección automática de tipo de proyecto
-- ✅ Validaciones de entrada
-- ✅ Tests unitarios
-- ✅ Instalación via pip (`pip install -e .`)
-- ✅ Manejo de errores y mensajes claros
-- ✅ Documentación con ejemplos
+### Implemented Features
+- ✅ Modern CLI with colors and emojis
+- ✅ Structured JSON configuration
+- ✅ Automatic project type detection
+- ✅ Input validations
+- ✅ Unit tests
+- ✅ Pip installation (`pip install -e .`)
+- ✅ Error handling and clear messages
+- ✅ Documentation with examples
 
-### Configuración generada (.pipeline/config.json)
+### Generated Configuration (.pipeline/config.json)
 ```json
 {
   "version": "1.0",
@@ -105,54 +105,54 @@ pipeline_creator/
 
 ## 🧪 Testing
 
-Los tests están implementados usando pytest:
+Tests are implemented using pytest:
 
 ```bash
-# Ejecutar tests
+# Run tests
 pytest tests/ -v
 
-# Con coverage
+# With coverage
 pytest tests/ -v --cov=pipeline_creator
 
-# Instalar dependencias de desarrollo
+# Install development dependencies
 pip install -e .[dev]
 ```
 
-**Coverage actual: 24%** (principalmente en comando `init`)
+**Current coverage: 24%** (mainly in `init` command)
 
-## 📦 Instalación y uso
+## 📦 Installation and Usage
 
-### Instalación en modo desarrollo
+### Development Installation
 ```bash
 cd creator_p/
 pip install -e .
 ```
 
-### Uso básico
+### Basic Usage
 ```bash
-# Inicializar pipeline
+# Initialize pipeline
 pipeline init -n "my-app" -r "us-west-2"
 
-# Ver ayuda
+# See help
 pipeline --help
 pipeline init --help
 
-# Otros comandos (placeholder)
+# Other commands (placeholder)
 pipeline generate
 pipeline deploy  
 pipeline status
 pipeline logs
 ```
 
-## 🔄 Próximos pasos (Fase 2)
+## 🔄 Next Steps (Phase 2)
 
-1. **Generación CDK**: Implementar generación real de archivos CDK
-2. **Despliegue AWS**: Integración con AWS CDK para deployment
-3. **Monitoreo**: Status real y logs desde CloudWatch
-4. **Templates**: Templates para diferentes tipos de proyecto
-5. **Configuración avanzada**: Más opciones de customización
-6. **Testing**: Expandir coverage a todos los comandos
+1. **CDK Generation**: Implement real CDK file generation
+2. **AWS Deployment**: Integration with AWS CDK for deployment
+3. **Monitoring**: Real status and logs from CloudWatch
+4. **Templates**: Templates for different project types
+5. **Advanced Configuration**: More customization options
+6. **Testing**: Expand coverage to all commands
 
-## 🎉 Estado actual
+## 🎉 Current Status
 
-**✅ MVP COMPLETADO** - El CLI está funcional y listo para usar. El comando `init` está completamente implementado y los otros comandos muestran información útil sobre lo que harán en versiones futuras.
+**✅ MVP COMPLETED** - The CLI is functional and ready to use. The `init` command is fully implemented and other commands show useful information about what they will do in future versions.

@@ -21,7 +21,7 @@ from .commands.logs import logs_command
 console = Console()
 
 # Context settings for better help formatting
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
 
 
 @click.group(context_settings=CONTEXT_SETTINGS, invoke_without_command=True)
