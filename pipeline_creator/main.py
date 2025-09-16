@@ -17,6 +17,7 @@ from .commands.generate import generate_command
 from .commands.deploy import deploy_command
 from .commands.status import status_command
 from .commands.logs import logs_command
+from .commands.add_stage import add_stage_command
 
 console = Console()
 
@@ -64,6 +65,7 @@ cli.add_command(generate_command, name='generate')
 cli.add_command(deploy_command, name='deploy')  
 cli.add_command(status_command, name='status')
 cli.add_command(logs_command, name='logs')
+cli.add_command(add_stage_command, name='add-stage')
 
 
 def main():

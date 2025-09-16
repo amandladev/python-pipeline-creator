@@ -20,6 +20,7 @@ from ..templates.cdk_python import (
     CDK_APP_TEMPLATE, PIPELINE_STACK_TEMPLATE, CDK_JSON_TEMPLATE,
     REQUIREMENTS_TEMPLATE, README_TEMPLATE
 )
+from ..templates.stages.extra_stages import get_stage_template
 
 
 def check_config_exists() -> bool:
@@ -46,6 +47,69 @@ def to_snake_case(name: str) -> str:
 def to_pascal_case(name: str) -> str:
     """Convert string to PascalCase"""
     return ''.join(word.capitalize() for word in re.split(r'[-_\s]+', name))
+
+
+def process_extra_stages(config: Dict[str, Any]) -> Dict[str, list]:
+    """Process extra stages and return commands by phase"""
+    stages_by_phase = {
+        "pre_build": [],
+        "build": [],
+        "post_build": []
+    }
+    
+    extra_stages = config.get("extra_stages", [])
+    
+    for stage_config in extra_stages:
+        if not stage_config.get("enabled", True):
+            continue
+            
+        stage_name = stage_config.get("name")
+        stage_template = get_stage_template(stage_name)
+        
+        if not stage_template:
+            continue
+            
+        phase = stage_config.get("phase", stage_template.get("phase", "build"))
+        commands = stage_template.get("commands", [])
+        
+        # Replace placeholders in commands with actual config values
+        stage_specific_config = stage_config.get("config", {})
+        processed_commands = []
+        
+        for command in commands:
+            processed_command = command
+            for key, value in stage_specific_config.items():
+                processed_command = processed_command.replace(f"{{{key}}}", str(value))
+            processed_commands.append(processed_command)
+        
+        # Add stage commands to the appropriate phase
+        if phase in stages_by_phase:
+            stages_by_phase[phase].extend([
+                f"# {stage_template.get('display_name', stage_name)} Stage"
+            ] + processed_commands + [""])
+    
+    return stages_by_phase
+
+
+def get_environment_variables(config: Dict[str, Any]) -> list:
+    """Get environment variables for all extra stages"""
+    env_vars = []
+    extra_stages = config.get("extra_stages", [])
+    
+    for stage_config in extra_stages:
+        if not stage_config.get("enabled", True):
+            continue
+            
+        stage_name = stage_config.get("name")
+        stage_template = get_stage_template(stage_name)
+        
+        if not stage_template:
+            continue
+            
+        stage_env_vars = stage_template.get("environment_variables", [])
+        env_vars.extend(stage_env_vars)
+    
+    return env_vars
 
 
 def detect_repository_info(config: Dict[str, Any]) -> tuple[str, str]:
@@ -96,6 +160,19 @@ def create_cdk_files(config: Dict[str, Any], output_dir: Path, language: str = '
         project_name_snake = to_snake_case(config['project_name'])
         project_name_pascal = to_pascal_case(config['project_name'])
         
+        # Process extra stages
+        print_step("Processing extra stages...")
+        extra_stage_commands = process_extra_stages(config)
+        env_vars = get_environment_variables(config)
+        
+        # Combine original commands with extra stage commands
+        pre_build_commands = (config['pipeline']['build_spec']['commands']['pre_build'] + 
+                             extra_stage_commands['pre_build'])
+        build_commands = (config['pipeline']['build_spec']['commands']['build'] + 
+                         extra_stage_commands['build'])
+        post_build_commands = (config['pipeline']['build_spec']['commands']['post_build'] + 
+                              extra_stage_commands['post_build'])
+        
         # Prepare template variables
         template_vars = {
             'project_name': config['project_name'],
@@ -105,10 +182,11 @@ def create_cdk_files(config: Dict[str, Any], output_dir: Path, language: str = '
             'environment': config['environment'],
             'repo_owner': repo_owner,
             'repo_name': repo_name,
-            'pre_build_commands': json.dumps(config['pipeline']['build_spec']['commands']['pre_build']),
-            'build_commands': json.dumps(config['pipeline']['build_spec']['commands']['build']),
-            'post_build_commands': json.dumps(config['pipeline']['build_spec']['commands']['post_build']),
-            'artifact_files': json.dumps(config['pipeline']['artifacts']['files'])
+            'pre_build_commands': json.dumps(pre_build_commands),
+            'build_commands': json.dumps(build_commands),
+            'post_build_commands': json.dumps(post_build_commands),
+            'artifact_files': json.dumps(config['pipeline']['artifacts']['files']),
+            'environment_variables': json.dumps(env_vars)
         }
         
         if language == 'python':

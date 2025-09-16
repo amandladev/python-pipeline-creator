@@ -26,7 +26,7 @@ def print_error(message: str) -> None:
     text = Text()
     text.append("❌ ", style="bold red")
     text.append(str(message), style="red")
-    console.print(text, file=sys.stderr)
+    console.print(text)
 
 
 def print_warning(message: str) -> None:

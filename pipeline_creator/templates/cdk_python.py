@@ -105,7 +105,11 @@ class PipelineStack(Stack):
             environment=codebuild.BuildEnvironment(
                 build_image=codebuild.LinuxBuildImage.STANDARD_7_0,
                 compute_type=codebuild.ComputeType.SMALL,
-                privileged=True
+                privileged=True,
+                environment_variables={{
+                    var["name"]: codebuild.BuildEnvironmentVariable(value=var["value"])
+                    for var in {environment_variables}
+                }} if {environment_variables} else {{}}
             ),
             build_spec=codebuild.BuildSpec.from_object({{
                 "version": "0.2",
